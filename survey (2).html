@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>산림가치관 진단</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest-950:#101d16;
+    --forest-800:#1f3626;
+    --forest-600:#365a3f;
+    --moss-500:#6c8f5e;
+    --moss-300:#a9c19a;
+    --paper:#f2f0e6;
+    --paper-dim:#e6e2d2;
+    --bark:#8a5a3b;
+    --bark-dim:#c98f63;
+    --ink:#1a1f19;
+    --ink-soft:#5b6459;
+    --danger:#a4432f;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Pretendard', -apple-system, sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .app{
+    width:100%;
+    max-width:640px;
+    min-height:100vh;
+    background:var(--paper);
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
+  .topbar{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:20px 24px 14px;
+    border-bottom:1px solid var(--paper-dim);
+    background:var(--paper);
+    position:sticky;
+    top:0;
+    z-index:5;
+  }
+  .mark{
+    width:30px;height:30px;border-radius:50%;
+    background:var(--forest-800);
+    flex-shrink:0;
+    position:relative;
+  }
+  .mark::after{
+    content:"";
+    position:absolute;inset:7px;
+    border-radius:50%;
+    background:var(--moss-300);
+  }
+  .brand{font-family:'Noto Serif KR',serif;font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--forest-800);}
+  .progress-track{
+    flex:1;height:6px;border-radius:99px;background:var(--paper-dim);overflow:hidden;
+  }
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--moss-500),var(--forest-600));border-radius:99px;transition:width .4s ease;}
+  .progress-label{font-size:12px;color:var(--ink-soft);font-variant-numeric:tabular-nums;min-width:34px;text-align:right;}
+
+  main{flex:1;padding:28px 24px 140px;}
+  .screen{display:none;animation:fade .35s ease;}
+  .screen.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .eyebrow{
+    font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--bark);margin-bottom:10px;
+  }
+  h1.title{
+    font-family:'Noto Serif KR',serif;font-weight:900;font-size:28px;line-height:1.35;
+    margin:0 0 12px;color:var(--forest-950);
+  }
+  .lede{font-size:15px;line-height:1.7;color:var(--ink-soft);margin:0 0 26px;}
+
+  .intro-visual{
+    width:100%;aspect-ratio:16/10;border-radius:var(--radius);
+    background:
+      radial-gradient(circle at 20% 30%, rgba(169,193,154,.55), transparent 55%),
+      radial-gradient(circle at 78% 65%, rgba(138,90,59,.35), transparent 50%),
+      linear-gradient(155deg, var(--forest-950), var(--forest-800) 60%, var(--forest-600));
+    margin-bottom:26px;position:relative;overflow:hidden;
+  }
+  .intro-visual svg{position:absolute;inset:0;width:100%;height:100%;}
+
+  .field{margin-bottom:22px;}
+  .field label.q{
+    display:block;font-size:14.5px;font-weight:600;color:var(--forest-950);margin-bottom:9px;
+  }
+  .field .hint{font-size:12.5px;color:var(--ink-soft);margin-top:6px;}
+  input[type=text], input[type=tel]{
+    width:100%;padding:13px 14px;border-radius:10px;border:1.5px solid var(--paper-dim);
+    background:#fff;font-size:15px;font-family:inherit;color:var(--ink);
+  }
+  input:focus{outline:none;border-color:var(--moss-500);}
+
+  .chip-group{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{
+    padding:9px 15px;border-radius:99px;border:1.5px solid var(--paper-dim);background:#fff;
+    font-size:13.5px;cursor:pointer;user-select:none;color:var(--ink-soft);transition:.15s;
+  }
+  .chip.sel{background:var(--forest-800);border-color:var(--forest-800);color:#fff;}
+
+  .seg{display:flex;border-radius:10px;overflow:hidden;border:1.5px solid var(--paper-dim);}
+  .seg > div{flex:1;text-align:center;padding:11px 6px;font-size:13.5px;cursor:pointer;background:#fff;color:var(--ink-soft);border-right:1px solid var(--paper-dim);}
+  .seg > div:last-child{border-right:none;}
+  .seg > div.sel{background:var(--forest-800);color:#fff;}
+
+  .likert-item{
+    background:#fff;border:1px solid var(--paper-dim);border-radius:12px;
+    padding:16px 16px 14px;margin-bottom:12px;
+  }
+  .likert-item .qtext{font-size:14px;line-height:1.55;color:var(--ink);margin-bottom:13px;font-weight:500;}
+  .likert-item .qtag{display:inline-block;font-size:10.5px;color:var(--bark);background:#f7ede1;padding:2px 8px;border-radius:99px;margin-bottom:8px;font-weight:600;letter-spacing:.03em;}
+  .scale5{display:flex;gap:6px;}
+  .scale5 .opt{
+    flex:1;aspect-ratio:1;border-radius:9px;border:1.5px solid var(--paper-dim);background:var(--paper);
+    display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink-soft);cursor:pointer;
+    transition:.12s;font-weight:600;
+  }
+  .scale5 .opt.sel{background:var(--moss-500);border-color:var(--moss-500);color:#fff;transform:scale(1.04);}
+  .scale-caption{display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink-soft);margin-top:6px;padding:0 2px;}
+
+  .section-divider{
+    display:flex;align-items:center;gap:10px;margin:6px 0 20px;
+    font-size:12px;color:var(--ink-soft);
+  }
+  .section-divider::before, .section-divider::after{content:"";flex:1;height:1px;background:var(--paper-dim);}
+
+  .footer-nav{
+    position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+    width:100%;max-width:640px;padding:16px 24px 20px;
+    background:linear-gradient(0deg, var(--paper) 65%, rgba(242,240,230,0));
+    display:flex;gap:10px;
+  }
+  button{font-family:inherit;cursor:pointer;border:none;}
+  .btn-primary{
+    flex:1;padding:16px;border-radius:12px;background:var(--forest-800);color:#fff;
+    font-size:15.5px;font-weight:700;transition:.15s;
+  }
+  .btn-primary:disabled{background:#c8c4b4;cursor:not-allowed;}
+  .btn-primary:not(:disabled):active{transform:scale(.98);}
+  .btn-ghost{
+    padding:16px 18px;border-radius:12px;background:transparent;color:var(--ink-soft);
+    font-size:14.5px;font-weight:600;border:1.5px solid var(--paper-dim);
+  }
+  .err-msg{color:var(--danger);font-size:12.5px;margin-top:8px;display:none;}
+  .err-msg.show{display:block;}
+
+  /* Result screen */
+  .quad-wrap{background:#fff;border:1px solid var(--paper-dim);border-radius:var(--radius);padding:22px;margin-bottom:20px;}
+  .quad-type-name{font-family:'Noto Serif KR',serif;font-weight:900;font-size:26px;color:var(--forest-950);margin:2px 0 6px;}
+  .quad-type-desc{font-size:14px;color:var(--ink-soft);line-height:1.6;margin-bottom:18px;}
+  .result-q{font-size:12.5px;font-weight:700;color:var(--bark);letter-spacing:.02em;margin-bottom:8px;}
+  .code-line{font-family:'Noto Serif KR',serif;font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:8px;letter-spacing:.04em;}
+  .quad-svg-box{width:100%;}
+  .bars{margin-top:6px;}
+  .bar-row{margin-bottom:14px;}
+  .bar-row .lab{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;color:var(--ink);}
+  .bar-track{height:9px;border-radius:99px;background:var(--paper-dim);overflow:hidden;}
+  .bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--bark-dim),var(--bark));}
+  .reflect-box{
+    background:var(--forest-950);color:var(--paper);border-radius:var(--radius);
+    padding:20px 20px 22px;margin-bottom:18px;
+  }
+  .reflect-box .lbl{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--moss-300);font-weight:700;margin-bottom:10px;}
+  .reflect-box p{font-size:13.5px;line-height:1.7;margin:0;color:#ece9dc;}
+  .done-note{text-align:center;font-size:13px;color:var(--ink-soft);margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <div class="topbar" id="topbar">
+    <div class="mark"></div>
+    <div class="brand">산림가치관 진단</div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-label" id="progressLabel">0%</div>
+  </div>
+
+  <main id="main">
+
+    <!-- 0: intro -->
+    <section class="screen active" data-screen="0">
+      <div class="intro-visual">
+        <svg viewBox="0 0 400 250" preserveAspectRatio="none">
+          <circle cx="70" cy="180" r="55" fill="#a9c19a" opacity=".5"/>
+          <circle cx="150" cy="150" r="80" fill="#6c8f5e" opacity=".4"/>
+          <circle cx="300" cy="170" r="100" fill="#8a5a3b" opacity=".25"/>
+          <path d="M0 220 Q100 190 200 215 T400 205 V250 H0 Z" fill="#101d16" opacity=".55"/>
+        </svg>
+      </div>
+      <div class="eyebrow">현장견학 프로그램 · 사전/사후 진단</div>
+      <h1 class="title">숲을 대하는 나의 시선,<br/>오늘 확인해봅니다</h1>
+      <p class="lede">
+        기본정보 → 산림경영 지식 자기진단 → 산림가치관(산림 MBTI) → 실행의향 순으로 약 5분 정도 소요됩니다.
+        응답을 마치면 바로 다음 화면에서 나의 산림가치관 유형을 확인할 수 있어요.
+      </p>
+      <div class="field">
+        <label class="q">조사 시점</label>
+        <div class="seg" id="timingSeg">
+          <div data-v="사전">1차 사전조사</div>
+          <div data-v="사후">4차 사후조사</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1: basic info -->
+    <section class="screen" data-screen="1">
+      <div class="eyebrow">Step 1</div>
+      <h1 class="title">참가자 정보</h1>
+      <p class="lede">사전-사후 응답을 짝짓는 데만 사용하며, 개인 식별 목적으로 공개되지 않습니다.</p>
+
+      <div class="field">
+        <label class="q">이름</label>
+        <input type="text" id="fName" placeholder="예: 홍길동" />
+      </div>
+      <div class="field">
+        <label class="q">연락처</label>
+        <input type="tel" id="fPhone" placeholder="예: 010-1234-5678" />
+      </div>
+      <div class="field">
+        <label class="q">보유 자격증 (해당 항목 모두 선택)</label>
+        <div class="chip-group" id="credChips">
+          <div class="chip" data-v="숲해설가">숲해설가</div>
+          <div class="chip" data-v="유아숲지도사">유아숲지도사</div>
+          <div class="chip" data-v="숲길등산지도사">숲길등산지도사</div>
+          <div class="chip" data-v="기타">기타</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2: knowledge -->
+    <section class="screen" data-screen="2">
+      <div class="eyebrow">Step 2</div>
+      <h1 class="title">산림경영 지식 자기진단</h1>
+      <p class="lede">다음 각 분야에 대해 현재 본인이 얼마나 알고 있다고 생각하는지 표시해 주세요.</p>
+      <div id="knowledgeList"></div>
+    </section>
+
+    <!-- 3: mbti -->
+    <section class="screen" data-screen="3">
+      <div class="eyebrow">Step 3</div>
+      <h1 class="title">산림가치관 (산림 MBTI)</h1>
+      <p class="lede">정답이 있는 질문이 아닙니다. 평소 생각에 가장 가까운 정도를 골라 주세요.</p>
+      <div id="mbtiList"></div>
+    </section>
+
+    <!-- 4: practice -->
+    <section class="screen" data-screen="4">
+      <div class="eyebrow">Step 4</div>
+      <h1 class="title">실행 의향</h1>
+      <p class="lede">이번 견학·교육 경험을 앞으로 어떻게 활용할지에 대한 질문입니다.</p>
+      <div id="practiceList"></div>
+    </section>
+
+    <!-- 5: result -->
+    <section class="screen" data-screen="5">
+      <div class="eyebrow">결과</div>
+      <h1 class="title">나의 산림 성향은</h1>
+
+      <div class="quad-wrap">
+        <div class="result-q">나의 산림가치관은?</div>
+        <div class="quad-type-name" id="typeName">-</div>
+        <div class="quad-type-desc" id="typeDesc">-</div>
+        <div class="quad-svg-box" id="quadSvgBox"></div>
+      </div>
+
+      <div class="quad-wrap">
+        <div class="result-q">나의 산림관리 성향은?</div>
+        <div class="quad-type-name" id="subTypeName">-</div>
+        <div class="quad-type-desc" id="subTypeDesc">-</div>
+        <div class="quad-svg-box" id="subSvgBox"></div>
+        <div class="code-line" id="codeLine"></div>
+      </div>
+
+      <div class="reflect-box">
+        <div class="lbl">함께 생각해볼 점</div>
+        <p>같은 사안도 토심·강수량·수종 같은 지역 맥락에 따라 전혀 다른 판단이 필요할 수 있습니다.
+        오늘의 유형은 "정답"이 아니라 지금 나의 관점을 비춰보는 거울입니다 —
+        이번 견학에서 마주할 실제 현장들이 이 관점을 어떻게 넓혀주는지 지켜봐 주세요.</p>
+      </div>
+
+      <div class="quad-wrap">
+        <div class="quad-type-desc" style="margin-bottom:14px;font-weight:600;color:var(--forest-950);">영역별 요약</div>
+        <div class="bars" id="summaryBars"></div>
+      </div>
+
+      <p class="done-note" id="doneNote">제출 중입니다...</p>
+    </section>
+
+  </main>
+
+  <div class="footer-nav" id="footerNav">
+    <button class="btn-ghost" id="btnBack">이전</button>
+    <button class="btn-primary" id="btnNext">시작하기</button>
+  </div>
+
+  <!-- 응답 전송용 (구글 시트로 전송, 화면에는 보이지 않음) -->
+  <iframe name="hidden_iframe" style="display:none;"></iframe>
+  <form id="gsForm" method="POST" target="hidden_iframe" style="display:none;"></form>
+
+</div>
+
+<script>
+(function(){
+  // ---------- DATA ----------
+  var KNOWLEDGE_ITEMS = [
+    "산림조성 (조림 및 육림)",
+    "산림보호 (산불 및 병해충 방지)",
+    "목재 생산 및 수확",
+    "단기소득임산물 생산",
+    "목재 가공 및 제품화",
+    "임산물 가공 및 상품화",
+    "산림 휴양 및 치유",
+    "산림 체험 및 교육",
+    "생태계 보전 및 탄소흡수"
+  ];
+
+  // axis: 'CU'(고=U/활용, 저=C/보존), 'SM'(고=M/적극관리, 저=S/방임),
+  //       'AK'(고=K/지식데이터, 저=A/정서경험), 'IP'(고=P/공동체참여, 저=I/개인실천)
+  // pole: 이 문항이 직접 측정하는 극 (해당 극에 동의할수록 raw 점수가 높음)
+  var MBTI_ITEMS = [
+    {issue:"벌목 · 목재수확", axis:"CU", pole:"U", text:"오래된 나무도 경제성이 있으면 벌채해야 한다"},
+    {issue:"벌목 · 목재수확", axis:"CU", pole:"C", text:"나무는 가급적 베지 않고 그대로 두는 것이 바람직하다"},
+    {issue:"벌목 · 목재수확", axis:"SM", pole:"M", text:"벌채한 곳은 반드시 재조림 등 사후관리가 이루어져야 한다"},
+    {issue:"벌목 · 목재수확", axis:"SM", pole:"S", text:"벌채 이후에는 자연적 회복 과정에 맡기는 것이 좋다"},
+    {issue:"임도",           axis:"CU", pole:"U", text:"임도는 임업 경제활동을 위한 필수 기반시설이다"},
+    {issue:"임도",           axis:"CU", pole:"C", text:"임도 건설은 산림 생태계를 훼손하므로 최소화해야 한다"},
+    {issue:"임도",           axis:"SM", pole:"M", text:"임도는 산불 진화 등 재난 대응을 위해 적극 확충해야 한다"},
+    {issue:"임도",           axis:"SM", pole:"S", text:"임도보다 자연적인 방화대·완충지대가 더 효과적이다"},
+    {issue:"사유림 경영",    axis:"CU", pole:"U", text:"사유림도 경제적 자원으로 적극 활용되어야 한다"},
+    {issue:"사유림 경영",    axis:"CU", pole:"C", text:"사유림이라도 가능한 보전 상태로 유지되는 것이 바람직하다"},
+    {issue:"사유림 경영",    axis:"SM", pole:"M", text:"사유림도 체계적인 경영계획에 따라 관리되어야 한다"},
+    {issue:"사유림 경영",    axis:"SM", pole:"S", text:"사유림 관리는 소유자의 자율적 판단에 맡기는 것이 좋다"},
+    {issue:"동기기반",       axis:"AK", pole:"A", text:"숲에 대한 나의 판단은 개인적 경험이나 추억에 근거한다"},
+    {issue:"동기기반",       axis:"AK", pole:"K", text:"숲에 대한 나의 판단은 통계나 연구 결과에 근거한다"},
+    {issue:"참여성향",       axis:"IP", pole:"I", text:"나는 개인적 실천(후원, 방문, 정보습득 등)으로 숲에 기여하고 싶다"},
+    {issue:"참여성향",       axis:"IP", pole:"P", text:"나는 공론화 · 협의체 같은 집단적 의사결정 과정에 참여하고 싶다"}
+  ];
+  // 각 축의 '고' 방향 극 (raw 점수를 그대로 쓰는 쪽). 반대 극 문항은 6-raw 로 반전.
+  var AXIS_HIGH_POLE = {CU:"U", SM:"M", AK:"K", IP:"P"};
+
+  var PRACTICE_ITEMS = [
+    "향후 6개월 내 내가 진행하는 교육 프로그램에 산림경영 관련 내용을 포함할 의향이 있다",
+    "이번 견학에서 발견한 사례를 실제 교육 소재로 활용할 의향이 있다",
+    "이번 견학에서 만난 전문가 · 참가자들과 지속적으로 교류할 의향이 있다"
+  ];
+
+  var QUAD_INFO = {
+    "CM":{name:"생태관리형", desc:"숲을 지키기 위해서도 과학적 개입이 필요하다는 입장이에요. 보존을 지향하되, 그 보존을 위해 적극적인 관리가 필요하다고 봅니다."},
+    "UM":{name:"산림경영형", desc:"관리된 숲이 더 건강하고 경제성도 있다는 입장이에요. 산림자원의 활용과 체계적 경영을 함께 중시합니다."},
+    "CS":{name:"자연천이형", desc:"인간이 손대지 않는 것이 최선이라는 입장이에요. 숲의 자연적 회복력과 자율적 변화를 신뢰합니다."},
+    "US":{name:"자원채취형", desc:"필요할 때만 개입하고 나머지는 자연에 맡긴다는 입장이에요. 활용은 지지하되 개입은 최소화하는 쪽을 선호합니다."}
+  };
+
+  var SUB_INFO = {
+    "AI":{name:"감성 실천형", desc:"개인적 경험과 추억을 바탕으로, 스스로 실천하며 숲과 관계 맺는 유형"},
+    "AP":{name:"공감 연대형", desc:"개인적 애착을 바탕으로 하되, 다른 사람들과 함께 목소리를 내고 싶어하는 유형"},
+    "KI":{name:"데이터 실천형", desc:"통계와 연구에 근거해 판단하되, 개인적 실천으로 표현하는 유형"},
+    "KP":{name:"정책 전문형", desc:"데이터와 공론화를 중시하며 정책적 해결을 지향하는 유형"}
+  };
+
+  var SCALE5_CAPTIONS_KNOW = ["전혀 모른다","","보통이다","","매우 잘 안다"];
+  var SCALE5_CAPTIONS_AGREE = ["전혀 그렇지 않다","","보통이다","","매우 그렇다"];
+
+  // ---------- 구글 시트 연동 ----------
+  // 아래 URL을 Google Apps Script 웹앱 배포 후 받은 주소(.../exec)로 반드시 교체하세요.
+  var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVbiu65IUBmClLCe8aaqqz0FqV4CNnuJX-Yy73n-Sg_fPmnYzs5SUErKtBpFRKw4dOkQ/exec";
+
+  // ---------- STATE ----------
+  var state = {
+    step: 0,
+    timing: "사전",
+    name: "",
+    phone: "",
+    credentials: [],
+    knowledge: {},   // index -> 1..5
+    mbti: {},        // index -> 1..5
+    practice: {}     // index -> 1..5
+  };
+
+  var STEP_ORDER = ["0","1","2","3","4","5"];
+
+  // ---------- BUILD FORM ITEMS ----------
+  function buildScale(container, captions){
+    var wrap = document.createElement('div');
+    wrap.className = 'scale5';
+    for(var i=1;i<=5;i++){
+      var o = document.createElement('div');
+      o.className='opt';
+      o.textContent = i;
+      o.dataset.v = i;
+      wrap.appendChild(o);
+    }
+    container.appendChild(wrap);
+    var cap = document.createElement('div');
+    cap.className='scale-caption';
+    cap.innerHTML = '<span>'+captions[0]+'</span><span>'+captions[4]+'</span>';
+    container.appendChild(cap);
+    return wrap;
+  }
+
+  function renderKnowledge(){
+    var host = document.getElementById('knowledgeList');
+    host.innerHTML = '';
+    KNOWLEDGE_ITEMS.forEach(function(text, idx){
+      var box = document.createElement('div');
+      box.className='likert-item';
+      var q = document.createElement('div');
+      q.className='qtext';
+      q.textContent = (idx+1)+'. '+text;
+      box.appendChild(q);
+      var scale = buildScale(box, SCALE5_CAPTIONS_KNOW);
+      Array.prototype.forEach.call(scale.children, function(opt){
+        opt.addEventListener('click', function(){
+          state.knowledge[idx] = parseInt(opt.dataset.v,10);
+          Array.prototype.forEach.call(scale.children, function(c){c.classList.remove('sel');});
+          opt.classList.add('sel');
+          updateNextEnabled();
+        });
+      });
+      host.appendChild(box);
+    });
+  }
+
+  function renderMbti(){
+    var host = document.getElementById('mbtiList');
+    host.innerHTML = '';
+    MBTI_ITEMS.forEach(function(item, idx){
+      var box = document.createElement('div');
+      box.className='likert-item';
+      var tag = document.createElement('div');
+      tag.className='qtag';
+      tag.textContent = item.issue;
+      box.appendChild(tag);
+      var q = document.createElement('div');
+      q.className='qtext';
+      q.textContent = item.text;
+      box.appendChild(q);
+      var scale = buildScale(box, SCALE5_CAPTIONS_AGREE);
+      Array.prototype.forEach.call(scale.children, function(opt){
+        opt.addEventListener('click', function(){
+          state.mbti[idx] = parseInt(opt.dataset.v,10);
+          Array.prototype.forEach.call(scale.children, function(c){c.classList.remove('sel');});
+          opt.classList.add('sel');
+          updateNextEnabled();
+        });
+      });
+      host.appendChild(box);
+    });
+  }
+
+  function renderPractice(){
+    var host = document.getElementById('practiceList');
+    host.innerHTML = '';
+    PRACTICE_ITEMS.forEach(function(text, idx){
+      var box = document.createElement('div');
+      box.className='likert-item';
+      var q = document.createElement('div');
+      q.className='qtext';
+      q.textContent = (idx+1)+'. '+text;
+      box.appendChild(q);
+      var scale = buildScale(box, SCALE5_CAPTIONS_AGREE);
+      Array.prototype.forEach.call(scale.children, function(opt){
+        opt.addEventListener('click', function(){
+          state.practice[idx] = parseInt(opt.dataset.v,10);
+          Array.prototype.forEach.call(scale.children, function(c){c.classList.remove('sel');});
+          opt.classList.add('sel');
+          updateNextEnabled();
+        });
+      });
+      host.appendChild(box);
+    });
+  }
+
+  // ---------- NAV ----------
+  function showStep(n){
+    document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+    var sel = document.querySelector('.screen[data-screen="'+n+'"]');
+    if(sel) sel.classList.add('active');
+    state.step = n;
+    updateProgress();
+    updateFooter();
+    window.scrollTo(0,0);
+  }
+
+  function updateProgress(){
+    var idx = STEP_ORDER.indexOf(String(state.step));
+    var pct = idx<0?0:Math.round((idx/(STEP_ORDER.length-1))*100);
+    document.getElementById('progressFill').style.width = pct+'%';
+    document.getElementById('progressLabel').textContent = pct+'%';
+  }
+
+  function updateFooter(){
+    var nav = document.getElementById('footerNav');
+    var back = document.getElementById('btnBack');
+    var next = document.getElementById('btnNext');
+    if(state.step === "admin"){ nav.style.display='none'; return; }
+    nav.style.display='flex';
+    back.style.display = state.step===0 ? 'none' : 'inline-block';
+    if(state.step===5){
+      next.textContent = '처음으로';
+      next.disabled = false;
+    } else if(state.step===0){
+      next.textContent = '시작하기';
+      next.disabled = false;
+    } else if(state.step===4){
+      next.textContent = '제출하고 결과 보기';
+      updateNextEnabled();
+    } else {
+      next.textContent = '다음';
+      updateNextEnabled();
+    }
+  }
+
+  function stepComplete(step){
+    if(step===1){
+      return state.name.trim().length>0 && state.phone.trim().length>0;
+    }
+    if(step===2){
+      return KNOWLEDGE_ITEMS.every(function(_,i){return state.knowledge[i];});
+    }
+    if(step===3){
+      return MBTI_ITEMS.every(function(_,i){return state.mbti[i];});
+    }
+    if(step===4){
+      return PRACTICE_ITEMS.every(function(_,i){return state.practice[i];});
+    }
+    return true;
+  }
+
+  function updateNextEnabled(){
+    var next = document.getElementById('btnNext');
+    if(state.step>=1 && state.step<=4){
+      next.disabled = !stepComplete(state.step);
+    }
+  }
+
+  function goNext(){
+    if(state.step===0){ showStep(1); return; }
+    if(state.step>=1 && state.step<=4){
+      if(!stepComplete(state.step)) return;
+      if(state.step===4){
+        submitAndScore();
+        return;
+      }
+      showStep(state.step+1);
+      return;
+    }
+    if(state.step===5){
+      location.href = location.pathname;
+      return;
+    }
+  }
+
+  function goBack(){
+    if(state.step===1){ showStep(0); return; }
+    if(state.step>=2 && state.step<=4){ showStep(state.step-1); return; }
+  }
+
+  // ---------- BASIC INFO WIRING ----------
+  document.getElementById('timingSeg').addEventListener('click', function(e){
+    var t = e.target.closest('div[data-v]');
+    if(!t) return;
+    state.timing = t.dataset.v;
+    Array.prototype.forEach.call(this.children, function(c){c.classList.remove('sel');});
+    t.classList.add('sel');
+  });
+  document.querySelector('#timingSeg div[data-v="사전"]').classList.add('sel');
+
+  document.getElementById('fName').addEventListener('input', function(e){
+    state.name = e.target.value; updateNextEnabled();
+  });
+  document.getElementById('fPhone').addEventListener('input', function(e){
+    state.phone = e.target.value; updateNextEnabled();
+  });
+  document.getElementById('credChips').addEventListener('click', function(e){
+    var c = e.target.closest('.chip');
+    if(!c) return;
+    c.classList.toggle('sel');
+    var v = c.dataset.v;
+    var i = state.credentials.indexOf(v);
+    if(c.classList.contains('sel')){ if(i===-1) state.credentials.push(v); }
+    else { if(i>-1) state.credentials.splice(i,1); }
+  });
+
+  document.getElementById('btnNext').addEventListener('click', goNext);
+  document.getElementById('btnBack').addEventListener('click', goBack);
+
+  // ---------- SCORING ----------
+  function average(arr){
+    if(!arr.length) return 0;
+    var s=0; arr.forEach(function(v){s+=v;});
+    return s/arr.length;
+  }
+
+  function computeResults(){
+    var knowVals = KNOWLEDGE_ITEMS.map(function(_,i){return state.knowledge[i];});
+    var knowAvg = average(knowVals);
+
+    var axisVals = {CU:[], SM:[], AK:[], IP:[]};
+    MBTI_ITEMS.forEach(function(item, idx){
+      var raw = state.mbti[idx];
+      var highPole = AXIS_HIGH_POLE[item.axis];
+      var contrib = (item.pole === highPole) ? raw : (6-raw);
+      axisVals[item.axis].push(contrib);
+    });
+    var cuAvg = average(axisVals.CU); // 1..5, 5=활용(U) 성향
+    var smAvg = average(axisVals.SM); // 1..5, 5=적극관리(M) 성향
+    var akAvg = average(axisVals.AK); // 1..5, 5=지식데이터(K) 성향
+    var ipAvg = average(axisVals.IP); // 1..5, 5=공동체참여(P) 성향
+    var cuPct = Math.round(((cuAvg-1)/4)*100);
+    var smPct = Math.round(((smAvg-1)/4)*100);
+    var akPct = Math.round(((akAvg-1)/4)*100);
+    var ipPct = Math.round(((ipAvg-1)/4)*100);
+
+    var practiceVals = PRACTICE_ITEMS.map(function(_,i){return state.practice[i];});
+    var practiceAvg = average(practiceVals);
+
+    var quadKey = (cuPct>=50?'U':'C') + (smPct>=50?'M':'S');
+    var subKey = (akPct>=50?'K':'A') + (ipPct>=50?'P':'I');
+    var fullCode = quadKey[0] + quadKey[1] + subKey[0] + subKey[1];
+
+    return {
+      knowAvg: knowAvg,
+      cuPct: cuPct,
+      smPct: smPct,
+      akPct: akPct,
+      ipPct: ipPct,
+      practiceAvg: practiceAvg,
+      quadKey: quadKey,
+      subKey: subKey,
+      fullCode: fullCode
+    };
+  }
+
+  function renderQuadSvg(targetId, xPct, yPct, xLowLabel, xHighLabel, yLowLabel, yHighLabel){
+    var x = 20 + (xPct/100)*160;
+    var y = 180 - (yPct/100)*160;
+    var svg = '' +
+      '<svg viewBox="0 0 200 200" style="width:100%;max-width:320px;display:block;margin:0 auto;">' +
+      '<line x1="20" y1="100" x2="180" y2="100" stroke="#e6e2d2" stroke-width="2"/>' +
+      '<line x1="100" y1="20" x2="100" y2="180" stroke="#e6e2d2" stroke-width="2"/>' +
+      '<text x="8" y="103" font-size="9" fill="#8a5a3b" font-family="Pretendard">'+xLowLabel+'</text>' +
+      '<text x="180" y="103" font-size="9" fill="#8a5a3b" font-family="Pretendard">'+xHighLabel+'</text>' +
+      '<text x="96" y="14" font-size="9" fill="#365a3f" font-family="Pretendard">'+yHighLabel+'</text>' +
+      '<text x="94" y="196" font-size="9" fill="#365a3f" font-family="Pretendard">'+yLowLabel+'</text>' +
+      '<circle cx="'+x+'" cy="'+y+'" r="7" fill="#8a5a3b" stroke="#101d16" stroke-width="1.5"/>' +
+      '</svg>';
+    document.getElementById(targetId).innerHTML = svg;
+  }
+
+  function renderBars(r){
+    var host = document.getElementById('summaryBars');
+    var items = [
+      {label:'산림경영 지식 자기평가', val: Math.round((r.knowAvg/5)*100)},
+      {label:'활용(U) 성향', val: r.cuPct},
+      {label:'적극관리(M) 성향', val: r.smPct},
+      {label:'지식·데이터(K) 성향', val: r.akPct},
+      {label:'공동체참여(P) 성향', val: r.ipPct},
+      {label:'실행 의향', val: Math.round((r.practiceAvg/5)*100)}
+    ];
+    host.innerHTML = items.map(function(it){
+      return '<div class="bar-row"><div class="lab"><span>'+it.label+'</span><span>'+it.val+'</span></div>' +
+        '<div class="bar-track"><div class="bar-fill" style="width:'+it.val+'%"></div></div></div>';
+    }).join('');
+  }
+
+  function submitAndScore(){
+    var r = computeResults();
+    var info = QUAD_INFO[r.quadKey];
+    var sub = SUB_INFO[r.subKey];
+
+    document.getElementById('typeName').textContent = info.name;
+    document.getElementById('typeDesc').textContent = info.desc;
+    renderQuadSvg('quadSvgBox', r.cuPct, r.smPct, 'C', 'U', 'S', 'M');
+
+    document.getElementById('subTypeName').textContent = sub.name;
+    document.getElementById('subTypeDesc').textContent = sub.desc;
+    renderQuadSvg('subSvgBox', r.akPct, r.ipPct, 'A', 'K', 'I', 'P');
+    document.getElementById('codeLine').textContent = '코드: ' + r.fullCode;
+
+    renderBars(r);
+    showStep(5);
+    submitToSheet(r);
+  }
+
+  function submitToSheet(r){
+    var doneNote = document.getElementById('doneNote');
+
+    if(!SCRIPT_URL || SCRIPT_URL.indexOf('PASTE_YOUR') === 0){
+      doneNote.textContent = '아직 구글 시트 연동 주소가 설정되지 않았어요. (개발자에게 SCRIPT_URL 설정을 요청하세요.)';
+      return;
+    }
+
+    var fields = {
+      timing: state.timing,
+      name: state.name,
+      phone: state.phone,
+      credentials: state.credentials.join(', '),
+      knowAvg: r.knowAvg.toFixed(2),
+      cuPct: r.cuPct,
+      smPct: r.smPct,
+      akPct: r.akPct,
+      ipPct: r.ipPct,
+      practiceAvg: r.practiceAvg.toFixed(2),
+      quadKey: r.quadKey,
+      quadName: QUAD_INFO[r.quadKey].name,
+      subKey: r.subKey,
+      subName: SUB_INFO[r.subKey].name,
+      fullCode: r.fullCode,
+      rawJson: JSON.stringify({knowledge:state.knowledge, mbti:state.mbti, practice:state.practice})
+    };
+
+    var form = document.getElementById('gsForm');
+    form.innerHTML = '';
+    form.action = SCRIPT_URL;
+    Object.keys(fields).forEach(function(key){
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = fields[key];
+      form.appendChild(input);
+    });
+
+    var iframe = document.querySelector('iframe[name="hidden_iframe"]');
+    var settled = false;
+    iframe.onload = function(){
+      if(settled) return;
+      settled = true;
+      doneNote.textContent = '제출이 완료되었습니다. 이 화면을 닫아도 좋습니다.';
+    };
+    // 네트워크가 느리거나 onload가 안 뜨는 환경 대비 fallback 안내
+    setTimeout(function(){
+      if(!settled){
+        settled = true;
+        doneNote.textContent = '제출을 진행 중입니다. 화면을 바로 닫아도 대부분 정상 저장되지만, 걱정되면 잠시 후 다시 확인해주세요.';
+      }
+    }, 4000);
+
+    try{
+      form.submit();
+    }catch(err){
+      doneNote.textContent = '제출에 실패했어요: '+(err && err.message ? err.message : String(err));
+    }
+  }
+
+  // ---------- INIT ----------
+  renderKnowledge();
+  renderMbti();
+  renderPractice();
+  showStep(0);
+
+})();
+</script>
+</body>
+</html>
