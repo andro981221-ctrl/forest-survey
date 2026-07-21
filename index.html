@@ -110,6 +110,8 @@
     margin-bottom:26px;position:relative;overflow:hidden;
   }
   .intro-visual svg{position:absolute;inset:0;width:100%;height:100%;}
+  .intro-visual.has-img{background:none;}
+  .intro-visual.has-img svg{display:none;}
 
   .field{margin-bottom:22px;}
   .field label.q{
@@ -283,7 +285,8 @@
 
     <!-- 0: intro -->
     <section class="screen active" data-screen="0">
-      <div class="intro-visual">
+      <div class="intro-visual" id="introVisual">
+        <img src="intro-visual.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onload="document.getElementById('introVisual').classList.add('has-img')" onerror="if(!this.dataset.retried){this.dataset.retried='1';this.src='intro-visual.jpg';}else{this.style.display='none';}">
         <svg viewBox="0 0 400 250" preserveAspectRatio="none">
           <circle cx="70" cy="180" r="55" fill="#c7cec1" opacity=".5"/>
           <circle cx="150" cy="150" r="80" fill="#8b9884" opacity=".4"/>
