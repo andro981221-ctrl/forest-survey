@@ -273,7 +273,7 @@
 <div class="app" id="app">
 
   <div class="topbar" id="topbar">
-    <div class="mark" id="markLogo"><img src="tree-logo.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;" onload="document.getElementById('markLogo').classList.add('has-img')" onerror="this.style.display='none';"></div>
+    <div class="mark" id="markLogo"><img src="tree-logo.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;" onload="document.getElementById('markLogo').classList.add('has-img')" onerror="if(!this.dataset.retried){this.dataset.retried='1';this.src='tree-logo.png.png';}else{this.style.display='none';}"></div>
     <div class="brand">산림가치관 진단</div>
     <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
     <div class="progress-label" id="progressLabel">0%</div>
@@ -519,7 +519,7 @@
       narrative:"당신은 산림이 사람들에게 다양한 혜택을 제공하는 자원이라고 생각하지만, 그 이용은 자연의 변화와 회복을 존중하는 범위 안에서 이루어져야 한다고 믿는 쪽에 가깝습니다. 산림을 활용하면서도 자연과 공존할 수 있는 균형을 중요하게 생각합니다."},
     "UM":{name:"경영자", icon:"📈", full:"자원활용·적극관리형",
       desc:"산림자원의 경제적·사회적 활용을 중요하게 생각하며, 목표 달성을 위해 적극적인 관리와 개입이 필요하다고 보는 유형",
-      narrative:"당신은 산림이 지역사회와 국가의 발전에 기여할 수 있는 중요한 자원이라고 믿는 쪽에 가깝습니다. 산림의 가치를 높이기 위해서는 계획적인 이용과 적극적인 관리가 필요하며, 재조림과 모니터링 등 책임 있는 관리가 함께 이루어져야 한다고 생각합니다."}
+      narrative:"당신은 산림이 지역사회와 국가의 발전에 기여할 수 있는 중요한 자원이라고 생각합니다. 산림의 가치를 높이기 위해서는 계획적인 이용과 적극적인 관리가 필요하며, 재조림과 모니터링 등 책임 있는 관리가 함께 이루어져야 한다고 믿는 쪽에 가깝습니다."}
   };
 
   // ② 나의 문제해결 유형은? (보조, 축3·4 A/D × E/P)
