@@ -269,6 +269,13 @@
   .reflect-box .lbl{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--moss-300);font-weight:700;margin-bottom:10px;}
   .reflect-box p{font-size:13.5px;line-height:1.7;margin:0;color:#ece9dc;}
   .done-note{text-align:center;font-size:13px;color:var(--ink-soft);margin-top:6px;}
+  .btn-save-image{
+    width:100%;padding:14px;border-radius:12px;background:#fff;color:var(--forest-800);
+    border:1.5px solid var(--forest-800);font-size:14.5px;font-weight:700;margin-bottom:20px;
+    cursor:pointer;transition:.15s;
+  }
+  .btn-save-image:active{transform:scale(.98);background:var(--paper-dim);}
+  .btn-save-image:disabled{opacity:.6;cursor:not-allowed;}
 </style>
 </head>
 <body>
@@ -286,7 +293,7 @@
     <!-- 0: intro -->
     <section class="screen active" data-screen="0">
       <div class="intro-visual" id="introVisual">
-        <img src="intro-visual.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onload="document.getElementById('introVisual').classList.add('has-img')" onerror="if(!this.dataset.retried){this.dataset.retried='1';this.src='intro-visual.jpg';}else{this.style.display='none';}">
+        <img src="intro-visual.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onload="document.getElementById('introVisual').classList.add('has-img')" onerror="this.style.display='none';">
         <svg viewBox="0 0 400 250" preserveAspectRatio="none">
           <circle cx="70" cy="180" r="55" fill="#c7cec1" opacity=".5"/>
           <circle cx="150" cy="150" r="80" fill="#8b9884" opacity=".4"/>
@@ -376,6 +383,7 @@
     <section class="screen" data-screen="5">
       <div class="eyebrow">결과</div>
 
+      <div id="resultCapture" class="result-capture">
       <div class="quad-wrap">
         <div class="result-q">나의 산림가치관은?</div>
         <div class="type-icon" id="typeIcon">🌲</div>
@@ -409,6 +417,9 @@
         오늘의 유형은 "정답"이 아니라 지금 나의 관점을 비춰보는 거울입니다 —
         이번 견학에서 마주할 실제 현장들이 이 관점을 어떻게 넓혀주는지 지켜봐 주세요.</p>
       </div>
+      </div>
+
+      <button class="btn-save-image" id="btnSaveImage">📷 결과 이미지로 저장</button>
 
       <div class="quad-wrap">
         <div class="quad-type-desc" style="margin-bottom:14px;font-weight:600;color:var(--forest-950);">영역별 요약</div>
@@ -431,6 +442,7 @@
 
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 (function(){
   // ---------- DATA ----------
@@ -561,6 +573,7 @@
   };
 
   var STEP_ORDER = ["0","1","2","3","4","5"];
+  var lastFullCode = '';
 
   // ---------- BUILD FORM ITEMS ----------
   var SCALE_SIZES = [42, 34, 26, 34, 42];
@@ -928,6 +941,7 @@
     document.getElementById('codeLine').textContent = r.fullCode;
     document.getElementById('subTypeDesc').textContent = '당신은 ' + sub.desc + '입니다.';
     document.getElementById('actionText').textContent = sub.action;
+    lastFullCode = r.fullCode;
 
     renderBars(r);
     showStep(5);
@@ -995,6 +1009,37 @@
       doneNote.textContent = '제출에 실패했어요: '+(err && err.message ? err.message : String(err));
     }
   }
+
+  // ---------- 결과 이미지 저장 ----------
+  document.getElementById('btnSaveImage').addEventListener('click', function(){
+    var btn = this;
+    if(typeof html2canvas === 'undefined'){
+      alert('이미지 저장 기능을 불러오지 못했어요. 네트워크 상태를 확인하고 다시 시도해주세요.');
+      return;
+    }
+    var target = document.getElementById('resultCapture');
+    var originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = '이미지 만드는 중...';
+    html2canvas(target, {
+      backgroundColor: '#ffffff',
+      scale: 2,
+      useCORS: true
+    }).then(function(canvas){
+      var link = document.createElement('a');
+      link.download = '나의_산림가치관_' + (lastFullCode || 'result') + '.png';
+      link.href = canvas.toDataURL('image/png');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }).catch(function(err){
+      alert('이미지 저장에 실패했어요: ' + (err && err.message ? err.message : String(err)));
+      btn.disabled = false;
+      btn.textContent = originalText;
+    });
+  });
 
   // ---------- INIT ----------
   renderKnowledge();
