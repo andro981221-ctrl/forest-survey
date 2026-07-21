@@ -4,21 +4,21 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>산림가치관 진단</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css" />
 <style>
   :root{
-    --forest-950:#101d16;
-    --forest-800:#1f3626;
-    --forest-600:#365a3f;
-    --moss-500:#6c8f5e;
-    --moss-300:#a9c19a;
-    --paper:#f2f0e6;
-    --paper-dim:#e6e2d2;
-    --bark:#8a5a3b;
-    --bark-dim:#c98f63;
-    --ink:#1a1f19;
-    --ink-soft:#5b6459;
+    --forest-950:#3a2f27;
+    --forest-800:#54463a;
+    --forest-600:#6b594a;
+    --moss-500:#8b9884;
+    --moss-300:#c7cec1;
+    --paper:#ffffff;
+    --paper-dim:#e8e2df;
+    --bark:#c75f71;
+    --bark-dim:#f0b8b8;
+    --ink:#2a2320;
+    --ink-soft:#6b5f58;
     --danger:#a4432f;
     --radius:14px;
   }
@@ -65,7 +65,8 @@
     border-radius:50%;
     background:var(--moss-300);
   }
-  .brand{font-family:'Noto Serif KR',serif;font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--forest-800);}
+  .mark.has-img::after{display:none;}
+  .brand{font-family:'Pretendard',sans-serif;font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--forest-800);}
   .progress-track{
     flex:1;height:6px;border-radius:99px;background:var(--paper-dim);overflow:hidden;
   }
@@ -82,10 +83,23 @@
     color:var(--bark);margin-bottom:10px;
   }
   h1.title{
-    font-family:'Noto Serif KR',serif;font-weight:900;font-size:28px;line-height:1.35;
+    font-family:'Pretendard',sans-serif;font-weight:900;font-size:28px;line-height:1.35;
     margin:0 0 12px;color:var(--forest-950);
   }
-  .lede{font-size:15px;line-height:1.7;color:var(--ink-soft);margin:0 0 26px;}
+  .lede{font-size:15px;line-height:1.7;color:var(--ink-soft);margin:0 0 22px;}
+  .intro-cta{
+    display:inline-block;font-size:13.5px;font-weight:700;color:var(--bark);
+    background:var(--bark-dim);border-radius:99px;padding:6px 14px;margin:-4px 0 16px;
+  }
+  .intro-info-grid{
+    border-top:1px solid var(--paper-dim);border-bottom:1px solid var(--paper-dim);
+    padding:16px 0;margin-bottom:24px;
+    display:flex;flex-direction:column;gap:14px;
+  }
+  .intro-info-row{display:flex;flex-direction:column;gap:4px;}
+  .intro-info-label{font-size:11px;font-weight:600;color:var(--ink-soft);letter-spacing:.06em;text-transform:uppercase;}
+  .intro-info-value{font-size:15px;font-weight:700;color:var(--forest-800);line-height:1.5;}
+  .intro-credit{font-size:11.5px;color:var(--ink-soft);text-align:center;margin-top:8px;}
 
   .intro-visual{
     width:100%;aspect-ratio:16/10;border-radius:var(--radius);
@@ -121,19 +135,49 @@
   .seg > div.sel{background:var(--forest-800);color:#fff;}
 
   .likert-item{
-    background:#fff;border:1px solid var(--paper-dim);border-radius:12px;
-    padding:16px 16px 14px;margin-bottom:12px;
+    background:#fff;border:1px solid var(--paper-dim);border-radius:14px;
+    padding:18px 18px 15px;margin-bottom:14px;
+    box-shadow:0 1px 2px rgba(16,29,22,.03), 0 6px 16px rgba(16,29,22,.035);
+    border-left:3px solid var(--paper-dim);
+    transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
   }
+  .likert-item.answered{border-left-color:var(--moss-500);box-shadow:0 2px 4px rgba(16,29,22,.04), 0 8px 20px rgba(139,152,132,.08);}
   .likert-item .qtext{font-size:14px;line-height:1.55;color:var(--ink);margin-bottom:13px;font-weight:500;}
-  .likert-item .qtag{display:inline-block;font-size:10.5px;color:var(--bark);background:#f7ede1;padding:2px 8px;border-radius:99px;margin-bottom:8px;font-weight:600;letter-spacing:.03em;}
-  .scale5{display:flex;gap:6px;}
-  .scale5 .opt{
-    flex:1;aspect-ratio:1;border-radius:9px;border:1.5px solid var(--paper-dim);background:var(--paper);
-    display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink-soft);cursor:pointer;
-    transition:.12s;font-weight:600;
+  .likert-item .qtag{display:inline-block;font-size:10.5px;color:var(--bark);background:#f7ede1;padding:3px 9px;border-radius:99px;margin-bottom:9px;font-weight:700;letter-spacing:.03em;}
+  .likert-item .qtag.axis-cu{color:var(--bark);background:#f7ede1;}
+  .likert-item .qtag.axis-sm{color:var(--forest-800);background:var(--moss-300);opacity:.85;color:#173222;}
+  .likert-item .qtag.axis-ak{color:#6b4b8a;background:#efe6f5;}
+  .likert-item .qtag.axis-ip{color:#2b5f7a;background:#e4eef3;}
+  .scale5-row{display:flex;align-items:center;gap:8px;}
+  .scale5-label{
+    width:54px;flex-shrink:0;font-size:10.5px;line-height:1.25;color:var(--ink-soft);font-weight:600;
   }
-  .scale5 .opt.sel{background:var(--moss-500);border-color:var(--moss-500);color:#fff;transform:scale(1.04);}
-  .scale-caption{display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink-soft);margin-top:6px;padding:0 2px;}
+  .scale5-label.left{text-align:left;}
+  .scale5-label.right{text-align:right;}
+  .scale5{display:flex;align-items:center;justify-content:center;gap:9px;flex:1;padding:4px 0;}
+  .scale5 .opt{
+    flex-shrink:0;border-radius:50%;border:2px solid var(--c, var(--paper-dim));background:transparent;
+    cursor:pointer;transition:.16s ease;
+  }
+  .scale5 .opt:hover{transform:scale(1.08);}
+  .scale5 .opt.sel{background:var(--c, var(--moss-500));box-shadow:0 3px 10px rgba(16,29,22,.18);transform:scale(1.06);}
+  .scale-caption{display:none;}
+
+  .issue-divider{
+    display:flex;align-items:center;gap:9px;margin:22px 0 12px;
+    font-size:11.5px;font-weight:700;color:var(--forest-800);letter-spacing:.03em;
+  }
+  .issue-divider::after{content:"";flex:1;height:1px;background:var(--paper-dim);}
+  .issue-divider:first-child{margin-top:2px;}
+
+  .mini-progress{
+    position:sticky;top:64px;z-index:4;display:flex;align-items:center;gap:8px;
+    background:rgba(255,255,255,.92);backdrop-filter:blur(4px);
+    padding:8px 2px 10px;margin-bottom:4px;
+  }
+  .mini-progress .track{flex:1;height:5px;border-radius:99px;background:var(--paper-dim);overflow:hidden;}
+  .mini-progress .fill{height:100%;background:var(--moss-500);border-radius:99px;transition:width .25s ease;}
+  .mini-progress .count{font-size:11px;color:var(--ink-soft);font-variant-numeric:tabular-nums;white-space:nowrap;}
 
   .section-divider{
     display:flex;align-items:center;gap:10px;margin:6px 0 20px;
@@ -144,7 +188,7 @@
   .footer-nav{
     position:fixed;bottom:0;left:50%;transform:translateX(-50%);
     width:100%;max-width:640px;padding:16px 24px 20px;
-    background:linear-gradient(0deg, var(--paper) 65%, rgba(242,240,230,0));
+    background:linear-gradient(0deg, var(--paper) 65%, rgba(255,255,255,0));
     display:flex;gap:10px;
   }
   button{font-family:inherit;cursor:pointer;border:none;}
@@ -162,20 +206,63 @@
   .err-msg.show{display:block;}
 
   /* Result screen */
-  .quad-wrap{background:#fff;border:1px solid var(--paper-dim);border-radius:var(--radius);padding:22px;margin-bottom:20px;}
-  .quad-type-name{font-family:'Noto Serif KR',serif;font-weight:900;font-size:26px;color:var(--forest-950);margin:2px 0 6px;}
+  .quad-wrap{
+    background:#fff;border:1px solid var(--paper-dim);border-radius:18px;padding:24px;margin-bottom:20px;
+    box-shadow:0 2px 4px rgba(16,29,22,.03), 0 10px 28px rgba(16,29,22,.06);
+  }
+  .type-icon{
+    width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+    font-size:26px;margin-bottom:12px;
+    background:linear-gradient(155deg, var(--moss-300), var(--moss-500));
+    box-shadow:0 6px 16px rgba(139,152,132,.35);
+  }
+  .quad-type-name{font-family:'Pretendard',sans-serif;font-weight:900;font-size:27px;color:var(--forest-950);margin:2px 0 6px;}
+  .type-full{font-size:13px;font-weight:700;color:var(--moss-500);margin-bottom:8px;letter-spacing:.01em;}
   .quad-type-desc{font-size:14px;color:var(--ink-soft);line-height:1.6;margin-bottom:18px;}
+  .type-narrative{
+    font-family:'Pretendard',sans-serif;font-style:italic;font-size:13px;line-height:1.75;color:var(--ink);
+    background:var(--paper);border-left:3px solid var(--moss-500);border-radius:4px;
+    padding:12px 14px;margin-bottom:18px;
+  }
+  .axis-meaning{
+    margin-top:14px;padding-top:14px;border-top:1px solid var(--paper-dim);
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .axis-meaning div{font-size:11.5px;line-height:1.5;color:var(--ink-soft);}
+  .axis-meaning b{color:var(--forest-800);font-weight:700;}
+
+  .sub-badge-box{
+    display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--paper-dim);
+    border-radius:14px;padding:14px 16px;margin-bottom:20px;
+    box-shadow:0 1px 2px rgba(16,29,22,.03), 0 6px 16px rgba(16,29,22,.04);
+  }
+  .sub-badge-icon{
+    width:40px;height:40px;border-radius:12px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:19px;
+    background:linear-gradient(155deg, var(--bark-dim), var(--bark));
+  }
+  .sub-badge-text{flex:1;min-width:0;}
+  .sub-badge-label{font-size:10.5px;color:var(--ink-soft);font-weight:600;margin-bottom:2px;}
+  .sub-badge-name{font-size:14.5px;font-weight:700;color:var(--forest-950);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sub-badge-code{
+    font-size:11px;color:var(--ink-soft);background:var(--paper);border:1px solid var(--paper-dim);
+    border-radius:99px;padding:4px 10px;flex-shrink:0;letter-spacing:.03em;
+  }
+  .reflect-divider{height:1px;background:rgba(255,255,255,.15);margin:16px 0;}
+  .sub-badge-desc{font-size:13px;line-height:1.65;color:var(--ink-soft);margin:-10px 0 20px;padding:0 2px;}
   .result-q{font-size:12.5px;font-weight:700;color:var(--bark);letter-spacing:.02em;margin-bottom:8px;}
-  .code-line{font-family:'Noto Serif KR',serif;font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:8px;letter-spacing:.04em;}
+  .code-line{font-family:'Pretendard',sans-serif;font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:8px;letter-spacing:.04em;}
   .quad-svg-box{width:100%;}
   .bars{margin-top:6px;}
   .bar-row{margin-bottom:14px;}
   .bar-row .lab{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;color:var(--ink);}
   .bar-track{height:9px;border-radius:99px;background:var(--paper-dim);overflow:hidden;}
-  .bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--bark-dim),var(--bark));}
+  .bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--bark-dim),var(--bark));transition:width .5s ease;}
   .reflect-box{
-    background:var(--forest-950);color:var(--paper);border-radius:var(--radius);
+    background:linear-gradient(160deg, var(--forest-950), var(--forest-800));
+    color:var(--paper);border-radius:18px;
     padding:20px 20px 22px;margin-bottom:18px;
+    box-shadow:0 10px 28px rgba(16,29,22,.22);
   }
   .reflect-box .lbl{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--moss-300);font-weight:700;margin-bottom:10px;}
   .reflect-box p{font-size:13.5px;line-height:1.7;margin:0;color:#ece9dc;}
@@ -186,7 +273,7 @@
 <div class="app" id="app">
 
   <div class="topbar" id="topbar">
-    <div class="mark"></div>
+    <div class="mark" id="markLogo"><img src="tree-logo.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;" onload="document.getElementById('markLogo').classList.add('has-img')" onerror="this.style.display='none';"></div>
     <div class="brand">산림가치관 진단</div>
     <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
     <div class="progress-label" id="progressLabel">0%</div>
@@ -198,32 +285,46 @@
     <section class="screen active" data-screen="0">
       <div class="intro-visual">
         <svg viewBox="0 0 400 250" preserveAspectRatio="none">
-          <circle cx="70" cy="180" r="55" fill="#a9c19a" opacity=".5"/>
-          <circle cx="150" cy="150" r="80" fill="#6c8f5e" opacity=".4"/>
-          <circle cx="300" cy="170" r="100" fill="#8a5a3b" opacity=".25"/>
-          <path d="M0 220 Q100 190 200 215 T400 205 V250 H0 Z" fill="#101d16" opacity=".55"/>
+          <circle cx="70" cy="180" r="55" fill="#c7cec1" opacity=".5"/>
+          <circle cx="150" cy="150" r="80" fill="#8b9884" opacity=".4"/>
+          <circle cx="300" cy="170" r="100" fill="#c75f71" opacity=".25"/>
+          <path d="M0 220 Q100 190 200 215 T400 205 V250 H0 Z" fill="#3a2f27" opacity=".55"/>
         </svg>
       </div>
-      <div class="eyebrow">현장견학 프로그램 · 사전/사후 진단</div>
-      <h1 class="title">숲을 대하는 나의 시선,<br/>오늘 확인해봅니다</h1>
+      <div class="eyebrow">산림교육전문가 자격관리 콘텐츠 개발 및 현장견학 운영</div>
+      <h1 class="title">산림에 대한 나의 생각,<br/>얼마나 알고 있나요?</h1>
       <p class="lede">
-        기본정보 → 산림경영 지식 자기진단 → 산림가치관(산림 MBTI) → 실행의향 순으로 약 5분 정도 소요됩니다.
-        응답을 마치면 바로 다음 화면에서 나의 산림가치관 유형을 확인할 수 있어요.
+        산림경영에 대한 지식부터 산림에 대한 가치관, 앞으로의 실행의향까지 확인하는 진단입니다.<br/>
+        약 8~10분이 소요되며, 응답을 완료하면 나의 산림가치관 유형을 바로 확인할 수 있습니다.
       </p>
+
+      <div class="intro-info-grid">
+        <div class="intro-info-row">
+          <span class="intro-info-label">진단 순서</span>
+          <span class="intro-info-value">기본정보 → 산림경영 지식 → 산림가치관 → 실행의향</span>
+        </div>
+        <div class="intro-info-row">
+          <span class="intro-info-label">조사 시점</span>
+          <span class="intro-info-value">사전 진단 · 사후 진단</span>
+        </div>
+      </div>
+
       <div class="field">
-        <label class="q">조사 시점</label>
+        <label class="q">조사 시점을 선택해주세요</label>
         <div class="seg" id="timingSeg">
           <div data-v="사전">1차 사전조사</div>
           <div data-v="사후">4차 사후조사</div>
         </div>
       </div>
+
+      <div class="intro-credit">산림청 · (사)충북산림포럼</div>
     </section>
 
     <!-- 1: basic info -->
     <section class="screen" data-screen="1">
       <div class="eyebrow">Step 1</div>
       <h1 class="title">참가자 정보</h1>
-      <p class="lede">사전-사후 응답을 짝짓는 데만 사용하며, 개인 식별 목적으로 공개되지 않습니다.</p>
+      <p class="lede">사전-사후 응답 비교를 위해서만 사용하며, 개인 식별 목적으로 공개되지 않습니다.</p>
 
       <div class="field">
         <label class="q">이름</label>
@@ -248,49 +349,60 @@
     <section class="screen" data-screen="2">
       <div class="eyebrow">Step 2</div>
       <h1 class="title">산림경영 지식 자기진단</h1>
-      <p class="lede">다음 각 분야에 대해 현재 본인이 얼마나 알고 있다고 생각하는지 표시해 주세요.</p>
+      <p class="lede">각 분야에 대해 내가 얼마나 알고 있는지 직접 평가해 보세요.</p>
       <div id="knowledgeList"></div>
     </section>
 
     <!-- 3: mbti -->
     <section class="screen" data-screen="3">
       <div class="eyebrow">Step 3</div>
-      <h1 class="title">산림가치관 (산림 MBTI)</h1>
-      <p class="lede">정답이 있는 질문이 아닙니다. 평소 생각에 가장 가까운 정도를 골라 주세요.</p>
+      <h1 class="title">산림경영 분야별 나의 가치관</h1>
+      <p class="lede">정답은 없습니다. 평소 자신의 생각과 가장 가까운 답을 선택해 주세요.</p>
       <div id="mbtiList"></div>
     </section>
 
     <!-- 4: practice -->
     <section class="screen" data-screen="4">
       <div class="eyebrow">Step 4</div>
-      <h1 class="title">실행 의향</h1>
-      <p class="lede">이번 견학·교육 경험을 앞으로 어떻게 활용할지에 대한 질문입니다.</p>
+      <h1 class="title">교육 실행 의향</h1>
+      <p class="lede">이번 견학에서의 경험을 앞으로 어떻게 활용할지에 대한 질문입니다.</p>
       <div id="practiceList"></div>
     </section>
 
     <!-- 5: result -->
     <section class="screen" data-screen="5">
       <div class="eyebrow">결과</div>
-      <h1 class="title">나의 산림 성향은</h1>
 
       <div class="quad-wrap">
         <div class="result-q">나의 산림가치관은?</div>
+        <div class="type-icon" id="typeIcon">🌲</div>
         <div class="quad-type-name" id="typeName">-</div>
+        <div class="type-full" id="typeFull">-</div>
         <div class="quad-type-desc" id="typeDesc">-</div>
+        <div class="type-narrative" id="typeNarrative"></div>
         <div class="quad-svg-box" id="quadSvgBox"></div>
+        <div class="axis-meaning">
+          <div><b>가로축 (C ↔ U)</b> 산림 관리에서 무엇을 우선하는가 — 보존(Conservation) ↔ 활용(Utilization)</div>
+          <div><b>세로축 (N ↔ M)</b> 산림을 어떻게 관리할 것인가 — 자연과정·저개입(Natural) ↔ 적극관리(Managed)</div>
+        </div>
       </div>
 
-      <div class="quad-wrap">
-        <div class="result-q">나의 산림관리 성향은?</div>
-        <div class="quad-type-name" id="subTypeName">-</div>
-        <div class="quad-type-desc" id="subTypeDesc">-</div>
-        <div class="quad-svg-box" id="subSvgBox"></div>
-        <div class="code-line" id="codeLine"></div>
+      <div class="sub-badge-box">
+        <div class="sub-badge-icon" id="subTypeIcon">🧭</div>
+        <div class="sub-badge-text">
+          <div class="sub-badge-label">나의 문제해결 유형입니다</div>
+          <div class="sub-badge-name"><span id="subTypeName">-</span> · <span id="subTypeFull">-</span></div>
+        </div>
+        <div class="sub-badge-code" id="codeLine">-</div>
       </div>
+      <p class="sub-badge-desc" id="subTypeDesc"></p>
 
-      <div class="reflect-box">
-        <div class="lbl">함께 생각해볼 점</div>
-        <p>같은 사안도 토심·강수량·수종 같은 지역 맥락에 따라 전혀 다른 판단이 필요할 수 있습니다.
+      <div class="quad-wrap" style="background:var(--forest-800);">
+        <div class="result-q" style="color:var(--moss-300);">그래서, 이렇게 해보세요</div>
+        <p id="actionText" style="color:#ece9dc;font-size:14px;line-height:1.75;margin:0 0 16px;"></p>
+        <div class="reflect-divider"></div>
+        <div class="result-q" style="color:var(--moss-300);">함께 생각해볼 점</div>
+        <p style="color:#ece9dc;font-size:13.5px;line-height:1.7;margin:0;">같은 사안도 토심·강수량·수종 같은 지역 맥락에 따라 전혀 다른 판단이 필요할 수 있습니다.
         오늘의 유형은 "정답"이 아니라 지금 나의 관점을 비춰보는 거울입니다 —
         이번 견학에서 마주할 실제 현장들이 이 관점을 어떻게 넓혀주는지 지켜봐 주세요.</p>
       </div>
@@ -331,29 +443,62 @@
     "생태계 보전 및 탄소흡수"
   ];
 
-  // axis: 'CU'(고=U/활용, 저=C/보존), 'SM'(고=M/적극관리, 저=S/방임),
-  //       'AK'(고=K/지식데이터, 저=A/정서경험), 'IP'(고=P/공동체참여, 저=I/개인실천)
+  // axis: 'CU'(고=U/활용, 저=C/보존), 'NM'(고=M/적극관리, 저=N/자연과정·저개입),
+  //       'AD'(고=D/데이터·근거, 저=A/경험·맥락), 'EP'(고=P/참여·협의, 저=E/전문가·효율)
   // pole: 이 문항이 직접 측정하는 극 (해당 극에 동의할수록 raw 점수가 높음)
+  // ※ 2026.7.21 이강오 이사장님 수정제안 반영: 문항 41개, 축 라벨 C/U·N/M·A/D·E/P로 확정
   var MBTI_ITEMS = [
-    {issue:"벌목 · 목재수확", axis:"CU", pole:"U", text:"오래된 나무도 경제성이 있으면 벌채해야 한다"},
-    {issue:"벌목 · 목재수확", axis:"CU", pole:"C", text:"나무는 가급적 베지 않고 그대로 두는 것이 바람직하다"},
-    {issue:"벌목 · 목재수확", axis:"SM", pole:"M", text:"벌채한 곳은 반드시 재조림 등 사후관리가 이루어져야 한다"},
-    {issue:"벌목 · 목재수확", axis:"SM", pole:"S", text:"벌채 이후에는 자연적 회복 과정에 맡기는 것이 좋다"},
-    {issue:"임도",           axis:"CU", pole:"U", text:"임도는 임업 경제활동을 위한 필수 기반시설이다"},
-    {issue:"임도",           axis:"CU", pole:"C", text:"임도 건설은 산림 생태계를 훼손하므로 최소화해야 한다"},
-    {issue:"임도",           axis:"SM", pole:"M", text:"임도는 산불 진화 등 재난 대응을 위해 적극 확충해야 한다"},
-    {issue:"임도",           axis:"SM", pole:"S", text:"임도보다 자연적인 방화대·완충지대가 더 효과적이다"},
-    {issue:"사유림 경영",    axis:"CU", pole:"U", text:"사유림도 경제적 자원으로 적극 활용되어야 한다"},
-    {issue:"사유림 경영",    axis:"CU", pole:"C", text:"사유림이라도 가능한 보전 상태로 유지되는 것이 바람직하다"},
-    {issue:"사유림 경영",    axis:"SM", pole:"M", text:"사유림도 체계적인 경영계획에 따라 관리되어야 한다"},
-    {issue:"사유림 경영",    axis:"SM", pole:"S", text:"사유림 관리는 소유자의 자율적 판단에 맡기는 것이 좋다"},
-    {issue:"동기기반",       axis:"AK", pole:"A", text:"숲에 대한 나의 판단은 개인적 경험이나 추억에 근거한다"},
-    {issue:"동기기반",       axis:"AK", pole:"K", text:"숲에 대한 나의 판단은 통계나 연구 결과에 근거한다"},
-    {issue:"참여성향",       axis:"IP", pole:"I", text:"나는 개인적 실천(후원, 방문, 정보습득 등)으로 숲에 기여하고 싶다"},
-    {issue:"참여성향",       axis:"IP", pole:"P", text:"나는 공론화 · 협의체 같은 집단적 의사결정 과정에 참여하고 싶다"}
+    // --- 1. 가치관 (C 보존 / U 활용) ---
+    {issue:"경제적 가치/생태적 가치", axis:"CU", pole:"C", text:"산림의 경제적 이익이 크더라도 생태적 가치가 훼손된다면 이용을 제한해야 한다."},
+    {issue:"경제적 가치/생태적 가치", axis:"CU", pole:"U", text:"지역경제 활성화를 위해서는 일부 생태적 훼손이 발생하더라도 산림의 경제적 이용이 필요하다."},
+    {issue:"임도", axis:"CU", pole:"U", text:"목재 생산과 산림관리를 위해서는 일부 생태적 훼손이 발생하더라도 임도를 개설할 수 있어야 한다."},
+    {issue:"임도", axis:"CU", pole:"C", text:"자연성이 높은 산림은 산불 예방이나 산림관리의 필요성이 있더라도 임도 개설을 신중하게 제한해야 한다."},
+    {issue:"소유 구분에 따른 산림경영", axis:"CU", pole:"U", text:"사유림은 개인의 재산이므로 법이 허용하는 범위에서 소유자의 이용과 경영이 우선되어야 한다."},
+    {issue:"소유 구분에 따른 산림경영", axis:"CU", pole:"C", text:"사유림이라도 국민의 환경과 생태에 영향을 미친다면 공익적 목적을 위해 이용을 제한할 수 있어야 한다."},
+    {issue:"산림 바이오매스", axis:"CU", pole:"U", text:"산림바이오매스는 화석연료를 대체하는 재생에너지이므로 적극적으로 활용해야 한다."},
+    {issue:"산림 바이오매스", axis:"CU", pole:"C", text:"산림바이오매스 이용으로 탄소저장량과 생물다양성이 감소할 수 있다면 이용을 제한해야 한다."},
+    {issue:"목재생산·생물다양성", axis:"CU", pole:"U", text:"지속가능한 목재 생산을 위해 계획된 벌채는 적극적으로 이루어져야 한다."},
+    {issue:"목재생산·생물다양성", axis:"CU", pole:"C", text:"경제적 이익이 있더라도 오래된 숲은 가능한 한 벌채하지 말아야 한다."},
+    {issue:"탄소저장·목재이용", axis:"CU", pole:"U", text:"기후위기 대응을 위해서는 숲에 나무를 그대로 두는 것보다 목재를 적극적으로 이용하는 것이 더 중요하다."},
+    {issue:"탄소저장·목재이용", axis:"CU", pole:"C", text:"숲이 대기 중의 탄소를 더 오래 저장할 수 있다면 경제적 수익이 줄더라도 벌채 시기를 늦출 수 있다고 생각한다."},
+    {issue:"휴양·경관", axis:"CU", pole:"U", text:"휴양과 경관에 미치는 영향을 최소화할 수 있다면 목재 생산을 위한 계획적인 벌채를 허용할 수 있다."},
+    {issue:"휴양·경관", axis:"CU", pole:"C", text:"휴양과 경관 가치가 높은 산림은 목재 수익이 감소하더라도 벌채를 줄여야 한다."},
+
+    // --- 2. 접근방식 (N 자연과정·저개입 / M 적극관리) ---
+    {issue:"전반적 산림관리", axis:"NM", pole:"N", text:"산림관리는 자연적인 변화 과정을 우선하고, 인간의 개입은 필요한 경우에만 이루어져야 한다."},
+    {issue:"전반적 산림관리", axis:"NM", pole:"M", text:"벌채한 산림은 자연적인 회복에만 맡기기보다 필요한 경우 재조림 등 사후관리를 실시해야 한다."},
+    {issue:"전반적 산림관리", axis:"NM", pole:"M", text:"산림의 건강성을 유지하기 위해서는 솎아베기나 병해충 방제와 같은 적극적인 관리가 필요하다."},
+    {issue:"전반적 산림관리", axis:"NM", pole:"N", text:"숲은 인간의 관리보다 자연적인 경쟁과 변화 과정을 통해 더 건강하게 유지될 수 있다."},
+    {issue:"산사태", axis:"NM", pole:"M", text:"산사태 위험이 있는 지역은 자연경관에 일부 영향이 있더라도 사방사업 등 예방적인 관리가 우선되어야 한다."},
+    {issue:"산불", axis:"NM", pole:"M", text:"산림의 자연성이 일부 훼손되더라도 산불 예방을 위해 낙엽과 고사목 등 산불 연료를 적극적으로 관리해야 한다."},
+    {issue:"병해충", axis:"NM", pole:"N", text:"병해충 피해가 심각하지 않다면 자연적인 조절 과정에 맡기는 것이 바람직하다."},
+    {issue:"기후변화 적응", axis:"NM", pole:"M", text:"기후변화에 대응하기 위해 기존 수종을 변화된 환경에 적합한 수종으로 전환할 필요가 있다."},
+    {issue:"산림갱신", axis:"NM", pole:"M", text:"훼손된 산림은 자연회복보다 적극적인 복원관리가 효과적이다."},
+    {issue:"재해 후 복구", axis:"NM", pole:"M", text:"산불이나 산사태로 피해를 입은 산림은 자연 회복을 기다리기보다 적극적인 복구를 우선해야 한다."},
+    {issue:"재해 후 복구", axis:"NM", pole:"N", text:"산불이나 산사태로 피해를 입은 산림은 인위적인 복구보다 자연적인 회복을 우선해야 한다."},
+    {issue:"관리 시점", axis:"NM", pole:"M", text:"산림은 문제가 발생하기 전에 지속적으로 관리하는 것이 중요하다."},
+    {issue:"재난 재해 대응", axis:"NM", pole:"N", text:"산림재해로 인한 피해가 크지 않다면 자연적인 회복 과정을 지켜보는 것이 바람직하다."},
+
+    // --- 3. 판단근거 (A 경험·맥락 / D 데이터·근거) ---
+    {issue:"동기기반", axis:"AD", pole:"A", text:"산림과 관련된 의사결정을 할 때 나는 직접 경험한 숲과 산림 활동의 경험을 중요하게 고려한다."},
+    {issue:"동기기반", axis:"AD", pole:"D", text:"산림과 관련된 의사결정을 할 때 통계와 연구 결과를 중요하게 고려한다."},
+    {issue:"판단 근거", axis:"AD", pole:"A", text:"산림과 관련된 의사결정을 할 때 지역주민이 오랜 기간 축적해 온 경험과 지식도 중요한 판단 근거가 될 수 있다."},
+    {issue:"판단 근거", axis:"AD", pole:"D", text:"산림과 관련된 의사결정에서 현장 경험과 연구 결과가 다를 때는 과학적으로 검증된 연구 결과를 우선 고려하는 편이다."},
+    {issue:"판단 근거", axis:"AD", pole:"A", text:"산림과 관련된 의사결정을 할 때는 지역마다 다른 사회적·문화적 맥락을 고려해야 한다."},
+    {issue:"판단 근거", axis:"AD", pole:"D", text:"산림과 관련된 의사결정은 개인의 경험보다 객관적인 조사자료에 근거해야 한다."},
+
+    // --- 4. 의사결정 방식 (E 전문가·효율 / P 참여·협의) ---
+    {issue:"의사결정 주체", axis:"EP", pole:"P", text:"산림과 관련된 의사결정 과정에는 지역주민과 이해관계자가 참여할 수 있어야 한다."},
+    {issue:"의사결정 주체", axis:"EP", pole:"E", text:"산림관리 방식은 산주와 전문가가 중심이 되어 결정하는 것이 바람직하다."},
+    {issue:"의사결정 절차", axis:"EP", pole:"P", text:"시간이 더 걸리더라도 지역주민과 이해관계자의 의견을 충분히 반영해야 한다."},
+    {issue:"의사결정 절차", axis:"EP", pole:"E", text:"재난 대응이 시급할 때는 폭넓은 협의보다 담당 기관과 전문가의 신속한 결정을 우선해야 한다."},
+    {issue:"의사결정 절차", axis:"EP", pole:"P", text:"산림사업을 시행하기 전에는 지역주민과 함께 영향을 검토해야 한다."},
+    {issue:"의사결정 주체", axis:"EP", pole:"E", text:"산림과 관련된 전문적인 판단은 전문가에게 맡기는 것이 바람직하다."},
+    {issue:"의사결정 주체", axis:"EP", pole:"P", text:"산림과 관련된 갈등은 충분한 협의를 통해 해결하는 것이 바람직하다."},
+    {issue:"의사결정 주체", axis:"EP", pole:"E", text:"산림과 관련된 의사결정은 다양한 의견보다 전문적인 판단을 우선해야 한다."}
   ];
   // 각 축의 '고' 방향 극 (raw 점수를 그대로 쓰는 쪽). 반대 극 문항은 6-raw 로 반전.
-  var AXIS_HIGH_POLE = {CU:"U", SM:"M", AK:"K", IP:"P"};
+  var AXIS_HIGH_POLE = {CU:"U", NM:"M", AD:"D", EP:"P"};
 
   var PRACTICE_ITEMS = [
     "향후 6개월 내 내가 진행하는 교육 프로그램에 산림경영 관련 내용을 포함할 의향이 있다",
@@ -361,18 +506,36 @@
     "이번 견학에서 만난 전문가 · 참가자들과 지속적으로 교류할 의향이 있다"
   ];
 
+  // ① 나의 산림가치관은? (메인, 축1·2 C/U × N/M)
   var QUAD_INFO = {
-    "CM":{name:"생태관리형", desc:"숲을 지키기 위해서도 과학적 개입이 필요하다는 입장이에요. 보존을 지향하되, 그 보존을 위해 적극적인 관리가 필요하다고 봅니다."},
-    "UM":{name:"산림경영형", desc:"관리된 숲이 더 건강하고 경제성도 있다는 입장이에요. 산림자원의 활용과 체계적 경영을 함께 중시합니다."},
-    "CS":{name:"자연천이형", desc:"인간이 손대지 않는 것이 최선이라는 입장이에요. 숲의 자연적 회복력과 자율적 변화를 신뢰합니다."},
-    "US":{name:"자원채취형", desc:"필요할 때만 개입하고 나머지는 자연에 맡긴다는 입장이에요. 활용은 지지하되 개입은 최소화하는 쪽을 선호합니다."}
+    "CN":{name:"숲지기", icon:"🌲", full:"생태보전·자연중시형",
+      desc:"숲의 생태적 가치와 자연 회복을 신뢰하는 유형입니다",
+      narrative:"당신은 산림의 생태적 가치를 가장 중요하게 여기며, 숲은 인간이 지나치게 개입하기보다 자연의 변화와 회복 과정을 통해 건강성을 유지할 수 있다고 믿는 쪽에 가깝습니다. 개발이나 이용이 필요하더라도 자연성을 최대한 보전하는 것이 우선되어야 한다고 생각합니다."},
+    "CM":{name:"정원사", icon:"🌱", full:"생태보전·적극관리형",
+      desc:"숲의 생태적 가치를 지키기 위해 필요한 관리와 개입을 중요하게 생각하는 유형입니다.",
+      narrative:"당신은 산림의 생태적 가치를 중요하게 생각하지만, 건강한 숲을 유지하기 위해서는 필요한 경우 적극적인 관리가 필요하다고 믿는 쪽에 가깝습니다. 산불 예방, 병해충 관리, 숲가꾸기와 같은 관리 활동은 자연을 훼손하기 위한 것이 아니라 숲을 지키기 위한 과정이라고 생각합니다."},
+    "UN":{name:"탐험가", icon:"🥾", full:"자원활용·자연과정형",
+      desc:"산림자원의 활용을 중요하게 생각하면서도 자연의 변화와 회복을 존중하는 유형입니다.",
+      narrative:"당신은 산림이 사람들에게 다양한 혜택을 제공하는 자원이라고 생각하지만, 그 이용은 자연의 변화와 회복을 존중하는 범위 안에서 이루어져야 한다고 믿는 쪽에 가깝습니다. 산림을 활용하면서도 자연과 공존할 수 있는 균형을 중요하게 생각합니다."},
+    "UM":{name:"경영자", icon:"📈", full:"자원활용·적극관리형",
+      desc:"산림자원의 경제적·사회적 활용을 중요하게 생각하며, 목표 달성을 위해 적극적인 관리와 개입이 필요하다고 보는 유형",
+      narrative:"당신은 산림이 지역사회와 국가의 발전에 기여할 수 있는 중요한 자원이라고 생각합니다. 산림의 가치를 높이기 위해서는 계획적인 이용과 적극적인 관리가 필요하며, 재조림과 모니터링 등 책임 있는 관리가 함께 이루어져야 한다고 믿는 쪽에 가깝습니다."}
   };
 
+  // ② 나의 문제해결 유형은? (보조, 축3·4 A/D × E/P)
   var SUB_INFO = {
-    "AI":{name:"감성 실천형", desc:"개인적 경험과 추억을 바탕으로, 스스로 실천하며 숲과 관계 맺는 유형"},
-    "AP":{name:"공감 연대형", desc:"개인적 애착을 바탕으로 하되, 다른 사람들과 함께 목소리를 내고 싶어하는 유형"},
-    "KI":{name:"데이터 실천형", desc:"통계와 연구에 근거해 판단하되, 개인적 실천으로 표현하는 유형"},
-    "KP":{name:"정책 전문형", desc:"데이터와 공론화를 중시하며 정책적 해결을 지향하는 유형"}
+    "AE":{name:"실천가", icon:"🛠️", full:"경험·전문가형",
+      desc:"직접 경험한 숲과 현장의 구체적인 맥락을 중시하면서, 전문가의 판단을 바탕으로 실행력 있는 의사결정을 선호하는 유형",
+      action:"현장의 경험과 구체적인 상황을 판단의 중요한 출발점으로 삼는 경향이 있습니다. 연구 결과와 다양한 이해관계자의 의견을 함께 고려하면 더욱 균형 있는 해결방안을 마련하는 데 도움이 됩니다."},
+    "AP":{name:"대화자", icon:"💬", full:"경험·참여형",
+      desc:"개인과 지역사회의 경험, 현장의 맥락을 중요하게 생각하며, 다양한 이해관계자와의 대화와 협의를 통해 문제를 해결하려는 유형",
+      action:"다양한 사람들의 경험과 현장의 맥락을 중요하게 고려하는 경향이 있습니다. 논의 과정에서 객관적인 자료와 전문가의 의견을 함께 활용하면 경험과 근거를 균형 있게 연결할 수 있습니다."},
+    "DE":{name:"분석가", icon:"📊", full:"데이터·전문가형",
+      desc:"객관적인 통계와 연구 결과를 바탕으로 판단하며, 전문가 중심의 효율적인 의사결정을 선호하는 유형",
+      action:"객관적인 자료와 과학적 근거를 바탕으로 판단하는 경향이 있습니다. 실제 현장의 상황이나 이해관계자의 경험을 함께 고려하면 자료가 포착하기 어려운 맥락을 보완할 수 있습니다."},
+    "DP":{name:"조정자", icon:"🤝", full:"데이터·참여형",
+      desc:"객관적인 근거와 데이터를 중시하면서도, 다양한 이해관계자의 참여와 협의를 통해 문제를 해결하려는 유형",
+      action:"객관적인 근거와 다양한 의견을 함께 고려하는 경향이 있습니다. 참여 과정에서 나온 다양한 경험과 의견을 객관적인 근거와 함께 검토하면 더욱 균형 있는 의사결정을 할 수 있습니다."}
   };
 
   var SCALE5_CAPTIONS_KNOW = ["전혀 모른다","","보통이다","","매우 잘 안다"];
@@ -397,27 +560,62 @@
   var STEP_ORDER = ["0","1","2","3","4","5"];
 
   // ---------- BUILD FORM ITEMS ----------
+  var SCALE_SIZES = [42, 34, 26, 34, 42];
+  var SCALE_COLORS = ['#c75f71', '#e3a2ac', '#d8d2c9', '#b7c2ae', '#8b9884'];
+
   function buildScale(container, captions){
+    var row = document.createElement('div');
+    row.className = 'scale5-row';
+
+    var leftLabel = document.createElement('div');
+    leftLabel.className = 'scale5-label left';
+    leftLabel.textContent = captions[0];
+    row.appendChild(leftLabel);
+
     var wrap = document.createElement('div');
     wrap.className = 'scale5';
     for(var i=1;i<=5;i++){
       var o = document.createElement('div');
       o.className='opt';
-      o.textContent = i;
       o.dataset.v = i;
+      o.style.width = SCALE_SIZES[i-1]+'px';
+      o.style.height = SCALE_SIZES[i-1]+'px';
+      o.style.setProperty('--c', SCALE_COLORS[i-1]);
       wrap.appendChild(o);
     }
-    container.appendChild(wrap);
-    var cap = document.createElement('div');
-    cap.className='scale-caption';
-    cap.innerHTML = '<span>'+captions[0]+'</span><span>'+captions[4]+'</span>';
-    container.appendChild(cap);
+    row.appendChild(wrap);
+
+    var rightLabel = document.createElement('div');
+    rightLabel.className = 'scale5-label right';
+    rightLabel.textContent = captions[4];
+    row.appendChild(rightLabel);
+
+    container.appendChild(row);
     return wrap;
   }
+
+  function makeMiniProgress(hostEl, total){
+    var wrap = document.createElement('div');
+    wrap.className = 'mini-progress';
+    wrap.innerHTML = '<div class="track"><div class="fill" style="width:0%"></div></div><div class="count">0 / '+total+'</div>';
+    hostEl.appendChild(wrap);
+    return {
+      fill: wrap.querySelector('.fill'),
+      count: wrap.querySelector('.count'),
+      update: function(done){
+        wrap.querySelector('.fill').style.width = Math.round((done/total)*100)+'%';
+        wrap.querySelector('.count').textContent = done+' / '+total;
+      }
+    };
+  }
+
+  var AXIS_TAG_CLASS = {CU:'axis-cu', NM:'axis-sm', AD:'axis-ak', EP:'axis-ip'};
 
   function renderKnowledge(){
     var host = document.getElementById('knowledgeList');
     host.innerHTML = '';
+    var progress = makeMiniProgress(host, KNOWLEDGE_ITEMS.length);
+    function countDone(){ return KNOWLEDGE_ITEMS.reduce(function(n,_,i){return n + (state.knowledge[i]?1:0);},0); }
     KNOWLEDGE_ITEMS.forEach(function(text, idx){
       var box = document.createElement('div');
       box.className='likert-item';
@@ -431,6 +629,8 @@
           state.knowledge[idx] = parseInt(opt.dataset.v,10);
           Array.prototype.forEach.call(scale.children, function(c){c.classList.remove('sel');});
           opt.classList.add('sel');
+          box.classList.add('answered');
+          progress.update(countDone());
           updateNextEnabled();
         });
       });
@@ -441,11 +641,21 @@
   function renderMbti(){
     var host = document.getElementById('mbtiList');
     host.innerHTML = '';
+    var progress = makeMiniProgress(host, MBTI_ITEMS.length);
+    function countDone(){ return MBTI_ITEMS.reduce(function(n,_,i){return n + (state.mbti[i]?1:0);},0); }
+    var lastIssue = null;
     MBTI_ITEMS.forEach(function(item, idx){
+      if(item.issue !== lastIssue){
+        var divider = document.createElement('div');
+        divider.className = 'issue-divider';
+        divider.textContent = item.issue;
+        host.appendChild(divider);
+        lastIssue = item.issue;
+      }
       var box = document.createElement('div');
       box.className='likert-item';
       var tag = document.createElement('div');
-      tag.className='qtag';
+      tag.className='qtag ' + (AXIS_TAG_CLASS[item.axis] || '');
       tag.textContent = item.issue;
       box.appendChild(tag);
       var q = document.createElement('div');
@@ -458,6 +668,8 @@
           state.mbti[idx] = parseInt(opt.dataset.v,10);
           Array.prototype.forEach.call(scale.children, function(c){c.classList.remove('sel');});
           opt.classList.add('sel');
+          box.classList.add('answered');
+          progress.update(countDone());
           updateNextEnabled();
         });
       });
@@ -481,6 +693,7 @@
           state.practice[idx] = parseInt(opt.dataset.v,10);
           Array.prototype.forEach.call(scale.children, function(c){c.classList.remove('sel');});
           opt.classList.add('sel');
+          box.classList.add('answered');
           updateNextEnabled();
         });
       });
@@ -613,7 +826,7 @@
     var knowVals = KNOWLEDGE_ITEMS.map(function(_,i){return state.knowledge[i];});
     var knowAvg = average(knowVals);
 
-    var axisVals = {CU:[], SM:[], AK:[], IP:[]};
+    var axisVals = {CU:[], NM:[], AD:[], EP:[]};
     MBTI_ITEMS.forEach(function(item, idx){
       var raw = state.mbti[idx];
       var highPole = AXIS_HIGH_POLE[item.axis];
@@ -621,27 +834,27 @@
       axisVals[item.axis].push(contrib);
     });
     var cuAvg = average(axisVals.CU); // 1..5, 5=활용(U) 성향
-    var smAvg = average(axisVals.SM); // 1..5, 5=적극관리(M) 성향
-    var akAvg = average(axisVals.AK); // 1..5, 5=지식데이터(K) 성향
-    var ipAvg = average(axisVals.IP); // 1..5, 5=공동체참여(P) 성향
+    var nmAvg = average(axisVals.NM); // 1..5, 5=적극관리(M) 성향
+    var adAvg = average(axisVals.AD); // 1..5, 5=데이터·근거(D) 성향
+    var epAvg = average(axisVals.EP); // 1..5, 5=참여·협의(P) 성향
     var cuPct = Math.round(((cuAvg-1)/4)*100);
-    var smPct = Math.round(((smAvg-1)/4)*100);
-    var akPct = Math.round(((akAvg-1)/4)*100);
-    var ipPct = Math.round(((ipAvg-1)/4)*100);
+    var nmPct = Math.round(((nmAvg-1)/4)*100);
+    var adPct = Math.round(((adAvg-1)/4)*100);
+    var epPct = Math.round(((epAvg-1)/4)*100);
 
     var practiceVals = PRACTICE_ITEMS.map(function(_,i){return state.practice[i];});
     var practiceAvg = average(practiceVals);
 
-    var quadKey = (cuPct>=50?'U':'C') + (smPct>=50?'M':'S');
-    var subKey = (akPct>=50?'K':'A') + (ipPct>=50?'P':'I');
+    var quadKey = (cuPct>=50?'U':'C') + (nmPct>=50?'M':'N');
+    var subKey = (adPct>=50?'D':'A') + (epPct>=50?'P':'E');
     var fullCode = quadKey[0] + quadKey[1] + subKey[0] + subKey[1];
 
     return {
       knowAvg: knowAvg,
       cuPct: cuPct,
-      smPct: smPct,
-      akPct: akPct,
-      ipPct: ipPct,
+      nmPct: nmPct,
+      adPct: adPct,
+      epPct: epPct,
       practiceAvg: practiceAvg,
       quadKey: quadKey,
       subKey: subKey,
@@ -656,11 +869,11 @@
       '<svg viewBox="0 0 200 200" style="width:100%;max-width:320px;display:block;margin:0 auto;">' +
       '<line x1="20" y1="100" x2="180" y2="100" stroke="#e6e2d2" stroke-width="2"/>' +
       '<line x1="100" y1="20" x2="100" y2="180" stroke="#e6e2d2" stroke-width="2"/>' +
-      '<text x="8" y="103" font-size="9" fill="#8a5a3b" font-family="Pretendard">'+xLowLabel+'</text>' +
-      '<text x="180" y="103" font-size="9" fill="#8a5a3b" font-family="Pretendard">'+xHighLabel+'</text>' +
-      '<text x="96" y="14" font-size="9" fill="#365a3f" font-family="Pretendard">'+yHighLabel+'</text>' +
-      '<text x="94" y="196" font-size="9" fill="#365a3f" font-family="Pretendard">'+yLowLabel+'</text>' +
-      '<circle cx="'+x+'" cy="'+y+'" r="7" fill="#8a5a3b" stroke="#101d16" stroke-width="1.5"/>' +
+      '<text x="8" y="103" font-size="9" fill="#c75f71" font-family="Pretendard">'+xLowLabel+'</text>' +
+      '<text x="180" y="103" font-size="9" fill="#c75f71" font-family="Pretendard">'+xHighLabel+'</text>' +
+      '<text x="96" y="14" font-size="9" fill="#54463a" font-family="Pretendard">'+yHighLabel+'</text>' +
+      '<text x="94" y="196" font-size="9" fill="#54463a" font-family="Pretendard">'+yLowLabel+'</text>' +
+      '<circle cx="'+x+'" cy="'+y+'" r="7" fill="#c75f71" stroke="#3a2f27" stroke-width="1.5"/>' +
       '</svg>';
     document.getElementById(targetId).innerHTML = svg;
   }
@@ -670,9 +883,9 @@
     var items = [
       {label:'산림경영 지식 자기평가', val: Math.round((r.knowAvg/5)*100)},
       {label:'활용(U) 성향', val: r.cuPct},
-      {label:'적극관리(M) 성향', val: r.smPct},
-      {label:'지식·데이터(K) 성향', val: r.akPct},
-      {label:'공동체참여(P) 성향', val: r.ipPct},
+      {label:'적극관리(M) 성향', val: r.nmPct},
+      {label:'데이터·근거(D) 성향', val: r.adPct},
+      {label:'참여·협의(P) 성향', val: r.epPct},
       {label:'실행 의향', val: Math.round((r.practiceAvg/5)*100)}
     ];
     host.innerHTML = items.map(function(it){
@@ -681,19 +894,37 @@
     }).join('');
   }
 
+  function setTypeIcon(el, src, fallbackEmoji){
+    el.innerHTML = '';
+    var img = document.createElement('img');
+    img.src = src;
+    img.alt = '';
+    img.style.cssText = 'width:100%;height:100%;object-fit:contain;border-radius:inherit;';
+    img.onerror = function(){
+      if(el.contains(img)) el.removeChild(img);
+      el.textContent = fallbackEmoji;
+    };
+    el.appendChild(img);
+  }
+
   function submitAndScore(){
     var r = computeResults();
     var info = QUAD_INFO[r.quadKey];
     var sub = SUB_INFO[r.subKey];
 
+    setTypeIcon(document.getElementById('typeIcon'), 'icon-'+r.quadKey+'.png', info.icon);
     document.getElementById('typeName').textContent = info.name;
+    document.getElementById('typeFull').textContent = info.full;
     document.getElementById('typeDesc').textContent = info.desc;
-    renderQuadSvg('quadSvgBox', r.cuPct, r.smPct, 'C', 'U', 'S', 'M');
+    document.getElementById('typeNarrative').textContent = info.narrative;
+    renderQuadSvg('quadSvgBox', r.cuPct, r.nmPct, 'C', 'U', 'N', 'M');
 
+    document.getElementById('subTypeIcon').textContent = sub.icon;
     document.getElementById('subTypeName').textContent = sub.name;
-    document.getElementById('subTypeDesc').textContent = sub.desc;
-    renderQuadSvg('subSvgBox', r.akPct, r.ipPct, 'A', 'K', 'I', 'P');
-    document.getElementById('codeLine').textContent = '코드: ' + r.fullCode;
+    document.getElementById('subTypeFull').textContent = sub.full;
+    document.getElementById('codeLine').textContent = r.fullCode;
+    document.getElementById('subTypeDesc').textContent = '당신은 ' + sub.desc + '입니다.';
+    document.getElementById('actionText').textContent = sub.action;
 
     renderBars(r);
     showStep(5);
@@ -715,14 +946,16 @@
       credentials: state.credentials.join(', '),
       knowAvg: r.knowAvg.toFixed(2),
       cuPct: r.cuPct,
-      smPct: r.smPct,
-      akPct: r.akPct,
-      ipPct: r.ipPct,
+      nmPct: r.nmPct,
+      adPct: r.adPct,
+      epPct: r.epPct,
       practiceAvg: r.practiceAvg.toFixed(2),
       quadKey: r.quadKey,
       quadName: QUAD_INFO[r.quadKey].name,
+      quadFull: QUAD_INFO[r.quadKey].full,
       subKey: r.subKey,
       subName: SUB_INFO[r.subKey].name,
+      subFull: SUB_INFO[r.subKey].full,
       fullCode: r.fullCode,
       rawJson: JSON.stringify({knowledge:state.knowledge, mbti:state.mbti, practice:state.practice})
     };
